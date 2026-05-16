@@ -1,0 +1,37 @@
+You are validating a new wallabag MCP server implementation before publication.
+
+Repository: this checkout of wallabag-mcp
+Implemented tool surface:
+- wallabag_health_check()
+- wallabag_list_entries(page, per_page, sort, order, archived, starred, unread, domain_name, tags)
+- wallabag_get_entry(entry_id, include_content)
+- wallabag_add_entry(url, title, tags, archive, starred)
+- wallabag_update_entry(entry_id, title, url, archived, starred, tags)
+- wallabag_archive_entry(entry_id)
+- wallabag_unarchive_entry(entry_id)
+- wallabag_star_entry(entry_id)
+- wallabag_unstar_entry(entry_id)
+- wallabag_reload_entry(entry_id)
+- wallabag_delete_entry(entry_id)
+- wallabag_list_tags()
+- wallabag_add_tags_to_entry(entry_id, tags)
+- wallabag_delete_tag(tag_id)
+- wallabag_list_annotations(entry_id)
+- wallabag_create_annotation(entry_id, text, quote, ranges_json)
+- wallabag_delete_annotation(annotation_id)
+
+Implementation notes:
+- Python 3.11 package using mcp.server.fastmcp.FastMCP.
+- All tool params use typing.Annotated + pydantic.Field descriptions.
+- Authentication supports either WALLABAG_ACCESS_TOKEN or password grant via WALLABAG_CLIENT_ID, WALLABAG_CLIENT_SECRET, WALLABAG_USERNAME, WALLABAG_PASSWORD.
+- Client uses Bearer token authorization and normalises wallabag HAL _embedded.items pagination responses.
+- Mutation endpoints normalise empty/non-JSON responses and refetch when needed.
+- Tests passing locally: ruff check, pytest, MCP stdio tools/list schema validation.
+- Live validation checks public wallabag API docs and hosted API documentation pages without account credentials.
+- Authenticated writes are not run against a public instance; HTTP behaviours are mocked with respx.
+
+Evaluate market/implementation fit and correctness. Return exactly:
+1. VERDICT: PASS or FAIL
+2. BLOCKERS: bullet list, or None
+3. NON-BLOCKING IMPROVEMENTS: up to 5 bullets
+4. PUBLICATION CONFIDENCE: 0-100
