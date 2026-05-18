@@ -1,5 +1,7 @@
 # wallabag MCP
 
+<!-- mcp-name: io.github.rusty4444/wallabag-mcp -->
+
 A Model Context Protocol (MCP) server for [wallabag](https://wallabag.org/), the open-source read-it-later service.
 
 This server gives AI assistants a structured interface for common wallabag workflows:
