@@ -53,7 +53,16 @@ def main() -> int:
     deepseek_key = os.environ.get("DEEPSEEK_API_KEY")
     if deepseek_key:
         targets.append(("deepseek_v4_pro", "https://api.deepseek.com/v1", "deepseek-v4-pro", deepseek_key))
-    targets.append(("aeon_ultimate", "http://192.168.68.164:8000/v1", "aeon-ultimate", "default"))
+    aeon_base_url = os.environ.get("AEON_BASE_URL")
+    if aeon_base_url:
+        targets.append(
+            (
+                "aeon_ultimate",
+                aeon_base_url,
+                os.environ.get("AEON_MODEL", "aeon-ultimate"),
+                os.environ.get("AEON_API_KEY", "default"),
+            )
+        )
 
     failures = 0
     for name, base, model, key in targets:
