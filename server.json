@@ -3,7 +3,7 @@
   "name": "io.github.rusty4444/wallabag-mcp",
   "title": "wallabag MCP",
   "description": "MCP server for wallabag read-it-later entries, tags, and annotations.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "websiteUrl": "https://github.com/rusty4444/wallabag-mcp",
   "repository": {
     "url": "https://github.com/rusty4444/wallabag-mcp",
@@ -14,7 +14,7 @@
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "wallabag-mcp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

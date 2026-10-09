@@ -4,13 +4,19 @@ from __future__ import annotations
 
 import os
 import sys
+from importlib.metadata import PackageNotFoundError, version
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 from . import client as api
 from .tools import register_tools
 
-mcp = FastMCP("wallabag-mcp")
+try:
+    __version__ = version("wallabag-mcp")
+except PackageNotFoundError:  # running from a source checkout without an install
+    __version__ = "0.0.0"
+
+mcp = MCPServer("wallabag-mcp", version=__version__)
 register_tools(mcp)
 
 
@@ -34,4 +40,4 @@ def main() -> None:
     mcp.run(transport="stdio")
 
 
-__all__ = ["main", "mcp"]
+__all__ = ["__version__", "main", "mcp"]

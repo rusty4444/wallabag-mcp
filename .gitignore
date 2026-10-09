@@ -12,3 +12,4 @@ build/
 venv/
 validation_*.txt
 .DS_Store
+uv.lock

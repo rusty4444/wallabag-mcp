@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from typing import Annotated, Any
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 from pydantic import Field
 
 from . import client as api
@@ -13,7 +13,7 @@ from . import client as api
 EntryId = Annotated[int, Field(description="wallabag entry/article id")]
 
 
-def register_tools(mcp: FastMCP) -> None:
+def register_tools(mcp: MCPServer) -> None:
     """Register wallabag MCP tools."""
 
     @mcp.tool()
