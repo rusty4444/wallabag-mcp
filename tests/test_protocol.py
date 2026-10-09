@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+import queue
 import subprocess
 import sys
+import threading
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,11 +27,45 @@ def _run_mcp(messages: list[dict]) -> list[dict]:
         text=True,
         env=env,
     )
-    payload = "\n".join(json.dumps(m) for m in messages) + "\n"
-    stdout, stderr = proc.communicate(payload, timeout=30)
-    proc.kill()
+    stdin = proc.stdin
+    stdout = proc.stdout
+    stderr_pipe = proc.stderr
+    assert stdin is not None
+    assert stdout is not None
+    assert stderr_pipe is not None
+    stdout_lines: queue.Queue[str | None] = queue.Queue()
+
+    def read_stdout() -> None:
+        for line in stdout:
+            stdout_lines.put(line)
+        stdout_lines.put(None)
+
+    threading.Thread(target=read_stdout, daemon=True).start()
+    responses: list[dict] = []
+    try:
+        for message in messages:
+            stdin.write(json.dumps(message) + "\n")
+            stdin.flush()
+            if "id" not in message:
+                continue
+            while True:
+                line = stdout_lines.get(timeout=30)
+                assert line is not None, "MCP server exited before replying"
+                response = json.loads(line)
+                responses.append(response)
+                if response.get("id") == message["id"]:
+                    break
+    finally:
+        stdin.close()
+        try:
+            proc.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait(timeout=10)
+
+    stderr = stderr_pipe.read()
     assert "Traceback" not in stderr
-    return [json.loads(line) for line in stdout.splitlines() if line.strip()]
+    return responses
 
 
 def test_tools_list_has_complete_descriptions() -> None:
