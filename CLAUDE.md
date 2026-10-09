@@ -9,12 +9,12 @@ pip install -e '.[dev]'          # setup
 ruff check .                     # lint (line-length 120, rules E,F,I,UP,B,SIM)
 pytest                           # tests
 pytest tests/test_client.py::test_oauth_token_requested_and_used   # single test
-python scripts/live_docs_test.py # hits live wallabag docs; also runs in CI
+python scripts/live_docs_test.py # optional; hits live wallabag docs
 ```
 
-CI (`.github/workflows/ci.yml`) runs exactly those four on Python 3.11.
+CI (`.github/workflows/ci.yml`) runs lint, syntax/import smoke checks, and the test suite on Python 3.11–3.14.
 
-`scripts/model_validate.py` is an optional, unwired LLM-endpoint check — not part of CI.
+`scripts/live_docs_test.py` and `scripts/model_validate.py` are optional network checks — neither is part of CI.
 
 ## Architecture
 
